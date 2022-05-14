@@ -1,0 +1,59 @@
+program -> functions
+
+functions -> function functions | (epsilon)
+
+function -> FUNCTION ident SEMICOLON BEGINPARAMS declarations ENDPARAMS BEGINLOCALS declarations ENDLOCALS BEGINBODY statements ENDBODY
+
+declarations -> declaration SEMICOLON declarations | (epsilon)
+
+declaration -> identifiers COLON INTEGER | identifiers COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER
+
+identifiers -> ident | ident COMMA identifiers
+
+ident -> IDENT
+
+statements -> statement SEMICOLON statements | statement SEMICOLON
+
+statement -> svar | sif | swhile | sdo | sfor | sread | swrite | scontinue | sreturn
+
+svar -> var ASSIGN expression
+
+sif -> IF bool_expr THEN statements ENDIF | IF bool_expr THEN statements ELSE statements ENDIF
+
+swhile -> WHILE bool_expr BEGINLOOP statements ENDLOOP
+
+sdo -> DO BEGINLOOP statements ENDLOOP WHILE bool_expr
+
+varLoop -> (epsilon) | COMMA var varLoop
+
+sread -> READ var varLoop
+
+swrite -> WRITE var varLoop
+
+scontinue -> CONTINUE
+
+sreturn -> RETURN expression
+
+bool_expr -> relation_exprs | bool_expr OR relation_exprs
+
+relation_&_expr -> rel_expr_cond | relation_&_expr AND rel_expr_cond
+
+rel_expr_cond -> relation_expr | NOT relation_expr
+
+relation_expr -> ece | TRUE | FALSE | L_PAREN bool_expr R_PAREN
+
+ece ->  expression comp expression
+
+comp -> EQ | NEQ | LET | GT | LTE | GTE
+
+expression -> multi_expr addSubExpr
+
+addSubExpr -> ADD expression | SUB expression | (epsilon)
+
+multi_expr -> term | term MULT multi_expr | term DIV multi_expr | term MOD multi_expr
+
+term -> SUB var | var | SUB NUMBER | NUMBER | L_PAREN expression R_PAREN | ident L_PAREN expression expressionLoop R_PAREN
+
+expressionLoop -> COMMA expression expressionLoop | (epsilon)
+
+var -> ident | ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET
